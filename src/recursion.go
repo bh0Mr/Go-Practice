@@ -6,8 +6,6 @@ func main() {
 	fmt.Printf("Factorial of number is: %d\n", factorial(5))
 }
 
-
-
 func factorial(n int) int {
 	
 	if n <= 1 {
