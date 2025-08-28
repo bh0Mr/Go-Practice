@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-    /
+    
     car1 := car.Car{,
         Model: "BMW",
         Year:  2020,
