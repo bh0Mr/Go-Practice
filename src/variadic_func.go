@@ -16,7 +16,7 @@ func main(){
 }
 
 
-func Max(nums     ...int) int {
+func Max(nums...int) int {
     if len(nums) == 0 {
         return 0 
     }
@@ -31,7 +31,7 @@ func Max(nums     ...int) int {
 
 
 
-func Data(nums...int){
+func Data(nums ...int){
 
     if len(nums) == 0 {
 
