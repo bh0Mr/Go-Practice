@@ -24,12 +24,23 @@ func main() {
 
 	C := Car{}
 	B := Bike{}
-
+    
 
 
 	PrintWheel(C)
 	PrintWheel(B)
 	
+
+  fmt.Println("=========================================================")
+
+
+  //for attack interface 
+
+    warrior := Warrior{name: "Hatim"}
+    mage := Mage{name: "Witch"}
+
+    performAttack(warrior)
+    performAttack(mage)
 
 
 
@@ -38,6 +49,7 @@ func main() {
 
 type Shape interface {
     Area() float64
+
 }
 
 
@@ -114,6 +126,41 @@ func PrintWheel(V Vehicle){
 
 	fmt.Println(V.Wheel())
 }
+
+
+
+
+
+///Example for attack interface 
+
+
+type Attacker interface {
+    attack()
+}
+
+type Warrior struct {
+    name string
+}
+
+func (w Warrior) attack() {
+    fmt.Println(w.name, "attacks with a sword!")
+}
+
+type Mage struct {
+    name string
+}
+
+func (m Mage) attack() {
+    fmt.Println(m.name, "casts a fireball!")
+}
+
+func performAttack(a Attacker) {
+    a.attack()
+}
+
+
+
+
 
 
 
