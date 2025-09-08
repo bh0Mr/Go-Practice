@@ -72,6 +72,20 @@ func main() {
     fmt.Println("Current Balance:", account.getBalance())
 
 
+    fmt.Println("========================================")
+
+
+   
+    
+    var myDate Date
+
+    myDate.SetYear(2023)
+    myDate.SetMonth(9)
+    myDate.SetDay(5)
+    
+    myDate.DisplayDate()
+
+
 	
 }
 
@@ -180,6 +194,51 @@ func (b *BankAccount) withdraw(amount float64) {
 func (b BankAccount) getBalance() float64 {
     return b.balance
 }
+
+
+// example 2
+
+type Date struct {
+    year  int
+    month int
+    day   int
+}
+
+func (d *Date) SetYear(y int) {
+    d.year = y
+}
+
+func (d *Date) SetMonth(m int) {
+    d.month = m
+}
+
+func (d *Date) SetDay(day int) {
+    d.day = day
+}
+
+func (d *Date) Year() int {
+    return d.year
+}
+
+func (d *Date) Month() int {
+    return d.month
+}
+
+func (d *Date) Day() int {
+    return d.day
+}
+
+func (d *Date) DisplayDate() {
+    fmt.Println(d.year,"-",d.month,"-",d.day)
+}
+
+
+
+
+
+
+
+
 
 
 
