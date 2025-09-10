@@ -10,7 +10,8 @@ func main() {
 	age := flag.Int("age", 18, "User's age")
 	active := flag.Bool("active", false, "Is user active?")
 
-	flag.Parse() // 🔸 Important: Parses the flags
+	flag.Parse() 
+	
 
 	fmt.Println("Name:", *name)
 	fmt.Println("Age:", *age)

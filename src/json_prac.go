@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 
@@ -15,7 +16,12 @@ func main() {
 		fmt.Println("Error marshaling:", err)
 		return
 	}
+
+
+
 	fmt.Println("JSON:", string(jsonData))
+
+
 
 	
 	jsonString := `{"name":"Bob","age":25}`
@@ -26,6 +32,9 @@ func main() {
 		return
 	}
 	fmt.Println("Go Struct:", p2)
+
+
+
 
 
 
@@ -56,6 +65,9 @@ func main() {
 
 	fmt.Println(string(jsonData3))
 
+
+
+
 	fmt.Println("==============================")
 
 
@@ -71,6 +83,34 @@ if err != nil {
 }
 
 fmt.Println(CompanyData)
+
+
+
+
+fmt.Println("============================================")
+
+
+
+
+jsonString2 := `{"Name":"A","Age":20,"Id":"243"}`
+ 
+
+
+reader := strings.NewReader(jsonString2)
+
+var jsonData1 interface{}
+
+
+err = json.NewDecoder(reader).Decode(&jsonData1)
+
+
+if err != nil{
+
+	fmt.Println("Error")
+}
+
+
+fmt.Println(jsonData1)
 
 
 
@@ -121,6 +161,11 @@ type Company struct {
 	Department Department   `json:"department"`
 
 }
+
+
+
+//////
+
 
 
 
