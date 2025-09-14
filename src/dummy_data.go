@@ -81,6 +81,7 @@ func PostHandler(w http.ResponseWriter,r *http.Request) {
 func main(){
 
 	http.HandleFunc("/",RootHandler)
+
 	http.HandleFunc("/Submit",PostHandler)
 
 	log.Println("Server start at port 8080")
@@ -93,6 +94,7 @@ func main(){
 
 
 	}
+	
 
 	
 
