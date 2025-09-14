@@ -74,6 +74,7 @@ func main() {
 CompanyJson := `{"companyName":"ABC","location":"Uganda", "department":{"dname":"CS","dempolyes":42} }`
 
 var CompanyData Company
+w.Header().Set("Content-Type", "application/json")
 
 err = json.Unmarshal([]byte(CompanyJson),&CompanyData)
 
