@@ -5,6 +5,7 @@ import "fmt"
 
 
 func main() {
+    
     Checkout(PayPal{}, 99.99)
     Checkout(CreditCard{}, 49.50)
 }
