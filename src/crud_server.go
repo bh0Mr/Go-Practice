@@ -19,7 +19,7 @@ type Company struct {
 var companies = []Company{}
 var idCounter = 1
 
-func GetCompanys(w http.ResponseWriter, r *http.Request) {
+func getCompanys(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -43,7 +43,7 @@ func GetCompanys(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func GetCompany(w http.ResponseWriter,r  * http.Request){
+func getCompany(w http.ResponseWriter,r  * http.Request){
 	w.Header().Set("Content-Type", "application/json")
 
 
@@ -71,7 +71,7 @@ func GetCompany(w http.ResponseWriter,r  * http.Request){
 
 
 }
-func AddCompany(w http.ResponseWriter, r *http.Request) {
+func addCompany(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
 
@@ -99,7 +99,7 @@ func AddCompany(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(newCompany)
 }
 
-func UpdateCompany(w http.ResponseWriter, r *http.Request) {
+func updateCompany(w http.ResponseWriter, r *http.Request) {
     if r.Method != http.MethodPut {
         w.Header().Set("X-Error-Message", "Invalid request method")
         w.WriteHeader(http.StatusMethodNotAllowed)
@@ -127,7 +127,7 @@ func UpdateCompany(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func DeleteCompany(w http.ResponseWriter, r *http.Request) {
+func deleteCompany(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method !=http.MethodDelete {
 		w.Header().Set("X-Error-Message", "Method not allowed")
@@ -160,11 +160,11 @@ func main() {
 
 
 
-	http.HandleFunc("/GetCompanys", GetCompanys)
-	http.HandleFunc("/GetCompany", GetCompany)
-	http.HandleFunc("/AddCompany", AddCompany)
-	http.HandleFunc("/UpdateCompany", UpdateCompany)
-	http.HandleFunc("/DeleteCompany", DeleteCompany)
+	http.HandleFunc("/GetCompanys", getCompanys)
+	http.HandleFunc("/GetCompany", getCompany)
+	http.HandleFunc("/AddCompany", addCompany)
+	http.HandleFunc("/UpdateCompany", updateCompany)
+	http.HandleFunc("/DeleteCompany", deleteCompany)
 	log.Println("Server started at http://localhost:8080")
 
 
