@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"fmt"
-	
-
 )
 
 type Company struct {
