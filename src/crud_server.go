@@ -4,19 +4,28 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"fmt"
 )
 
 type Company struct {
+	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Location string `json:"location"`
 	Employees int   `json:"employees"`
 }
 
-var companies []Company
+var companies = []Company{}
+var idCounter = 1
 
-func GetHandler(w http.ResponseWriter, r *http.Request) {
+func getCompanys(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+
+	if r.Method !=http.MethodGet {
+		w.Header().Set("X-Error-Message", "Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
 	if len(companies) == 0 {
 		w.WriteHeader(http.StatusOK)
@@ -27,69 +36,133 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	json.NewEncoder(w).Encode(companies)
+
+
 }
 
-func PostHandler(w http.ResponseWriter, r *http.Request) {
+
+func getCompany(w http.ResponseWriter,r  * http.Request){
+	w.Header().Set("Content-Type", "application/json")
+
+
+	if r.Method !=http.MethodGet {
+		w.Header().Set("X-Error-Message", "Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
+	id := r.URL.Query().Get("id")
+	if id == ""{
+	   http.Error(w, "ID parameter is required", http.StatusBadRequest)
+	   return
+	}
+
+	for _,c := range companies {
+		if fmt.Sprintf("%d",c.ID) == id {
+			json.NewEncoder(w).Encode(c)
+			return
+
+		}
+	}
+
+	http.Error(w,"Company not founf",http.StatusNotFound)
+
+
+}
+func addCompany(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+
+		w.Header().Set("X-Error-Message", "Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return 
+	}
 
 	var newCompany Company
 
 
 	err := json.NewDecoder(r.Body).Decode(&newCompany)
 	if err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 
+	newCompany.ID = idCounter
+	idCounter++
 	companies = append(companies, newCompany)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-
 	json.NewEncoder(w).Encode(newCompany)
 }
 
-func UpdateHandler(w http.ResponseWriter, r *http.Request) {
-	
-	var updatedCompany Company
+func updateCompany(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPut {
+        w.Header().Set("X-Error-Message", "Invalid request method")
+        w.WriteHeader(http.StatusMethodNotAllowed)
+        return 
+    }
 
-	err := json.NewDecoder(r.Body).Decode(&updatedCompany)
-	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+    var updatedCompany Company
+    err := json.NewDecoder(r.Body).Decode(&updatedCompany)
+    if err != nil {
+        http.Error(w, "Invalid input data", http.StatusBadRequest)
+        return
+    }
+
+    for i, c := range companies {
+        if c.ID == updatedCompany.ID {
+            companies[i] = updatedCompany
+            w.Header().Set("Content-Type", "application/json")
+            w.WriteHeader(http.StatusOK)
+            json.NewEncoder(w).Encode(updatedCompany)
+            return
+        }
+    }
+
+    http.Error(w, "Company not found", http.StatusNotFound)
+}
+
+
+func deleteCompany(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method !=http.MethodDelete {
+		w.Header().Set("X-Error-Message", "Method not allowed")
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
-	if len(companies) > 0 {
-		companies[0] = updatedCompany
-	}
+    id := r.URL.Query().Get("id")
+    if id == "" {
+        http.Error(w, "ID parameter is required", http.StatusBadRequest)
+        return
+    }
 
-	w.Header().Set("Content-Type", "application/json")
+    for i, c := range companies {
+        if fmt.Sprintf("%d", c.ID) == id {
 
-	w.WriteHeader(http.StatusOK)
+            companies = append(companies[:i], companies[i+1])
+            w.Header().Set("Content-Type", "application/json")
+            w.WriteHeader(http.StatusOK)
+            json.NewEncoder(w).Encode(companies)
 
-	json.NewEncoder(w).Encode(updatedCompany)
+            return
+        }
+    }
 
+    http.Error(w, "Company not found", http.StatusNotFound)
 }
-
-func DeleteHandler(w http.ResponseWriter, r *http.Request) {
-
-
-	companies = companies[1:]
-
-	w.WriteHeader(http.StatusNoContent)
-} 
 
 func main() {
 
-	http.HandleFunc("/Get", GetHandler)
 
 
-	http.HandleFunc("/Post", PostHandler)
-
-	http.HandleFunc("/Update", UpdateHandler)
-
-	http.HandleFunc("/Delete", DeleteHandler)
-
+	http.HandleFunc("/GetCompanys", getCompanys)
+	http.HandleFunc("/GetCompany", getCompany)
+	http.HandleFunc("/AddCompany", addCompany)
+	http.HandleFunc("/UpdateCompany", updateCompany)
+	http.HandleFunc("/DeleteCompany", deleteCompany)
 	log.Println("Server started at http://localhost:8080")
 
 
