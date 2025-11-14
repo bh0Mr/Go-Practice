@@ -1,3 +1,1 @@
 
-		mu.Lock()
-		counter++
