@@ -32,7 +32,7 @@ var users = make(map[int]User)
 var nextID = 1
 
 
-func ZapLogger(logger *zap.Logger) gin.HandlerFunc {
+/*func ZapLogger(logger *zap.Logger) gin.HandlerFunc {
     return func(c *gin.Context) {
 
 
@@ -51,7 +51,44 @@ func ZapLogger(logger *zap.Logger) gin.HandlerFunc {
         
         )
     }
+} */
+
+func StatusLogger(logger *zap.Logger) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        c.Next()
+        status := c.Writer.Status()
+
+        logger.Info("status log",
+            zap.Int("status", status),
+        )
+    }
 }
+
+func MethodLogger(logger *zap.Logger) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        method := c.Request.Method
+
+        logger.Info("method log",
+            zap.String("method", method),
+        )
+        
+        c.Next()
+    }
+}
+
+func IPLogger(logger *zap.Logger) gin.HandlerFunc {
+    return func(c *gin.Context) {
+        clientIP := c.ClientIP()
+
+        logger.Info("ip log",
+            zap.String("client_ip", clientIP),
+        )
+
+        c.Next()
+    }
+} 
+
+
 
 func main() {
 
@@ -65,7 +102,11 @@ func main() {
 
     
     r := gin.New()
-    r.Use(ZapLogger(logger))
+    //r.Use(ZapLogger(logger))
+    r.Use(MethodLogger((logger)))
+    r.Use(IPLogger(logger))
+    r.Use(StatusLogger(logger))
+    
     r.Use(gin.Recovery())
 
 
